@@ -1,0 +1,127 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 2.8.1)'
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  version:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set version
+        shell: pwsh
+        run: |
+          $version = "${{ inputs.version }}"
+          $parts = $version.Split('.')
+          $comma = ($parts + @('0') * 4)[0..3] -join ','
+          $dot = ($parts + @('0') * 4)[0..3] -join '.'
+
+          Write-Host "Setting version to $version (file version: $dot)"
+
+          # Update PROGRAM_VERSION in src/types.h
+          $types = Get-Content "src/types.h" -Raw
+          $types = $types -replace '#define PROGRAM_VERSION\s+L"[^"]*"', "#define PROGRAM_VERSION   L`"$version`""
+          Set-Content "src/types.h" $types -NoNewline
+
+          # Update VERSIONINFO in res/tpkb.rc
+          $rc = Get-Content "res/tpkb.rc" -Raw
+          $rc = $rc -replace 'FILEVERSION\s+\d+,\d+,\d+,\d+', "FILEVERSION    $comma"
+          $rc = $rc -replace 'PRODUCTVERSION\s+\d+,\d+,\d+,\d+', "PRODUCTVERSION $comma"
+          $rc = $rc -replace '"FileVersion",\s*"[^"]*"', "`"FileVersion`", `"$dot`""
+          $rc = $rc -replace '"ProductVersion",\s*"[^"]*"', "`"ProductVersion`", `"$dot`""
+          Set-Content "res/tpkb.rc" $rc -NoNewline
+
+      - name: Commit version
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/types.h res/tpkb.rc
+          $status = git status --porcelain
+          if ($status) {
+            git commit -m "Release v${{ inputs.version }}"
+            git push
+          }
+
+  build:
+    needs: version
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        include:
+          - compiler: msvc
+            generator: NMake Makefiles
+          - compiler: mingw
+            generator: MinGW Makefiles
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup MSVC
+        if: matrix.compiler == 'msvc'
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
+
+      - name: Setup MinGW
+        if: matrix.compiler == 'mingw'
+        shell: pwsh
+        run: echo "C:\msys64\ucrt64\bin" >> $env:GITHUB_PATH
+
+      - name: Build
+        run: |
+          cmake -B build -G "${{ matrix.generator }}" -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+
+      - name: Prepare release files
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist
+          Copy-Item "build/tpkb.exe" "dist/"
+          Copy-Item "LICENSE.txt" "dist/"
+          Copy-Item "README.md" "dist/"
+          Compress-Archive -Path "dist/*" -DestinationPath "tpkb-v${{ inputs.version }}-${{ matrix.compiler }}.zip"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: tpkb v${{ inputs.version }}
+          body: |
+            ## tpkb v${{ inputs.version }}
+
+            ## Installation
+
+            1. Extract the zip file to any folder
+            2. Run `tpkb.exe`
+            3. The app runs in the system tray
+
+            ## Requirements
+
+            - Windows 10/11
+          files: tpkb-v${{ inputs.version }}-${{ matrix.compiler }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: tpkb-v${{ inputs.version }}-${{ matrix.compiler }}
+          path: build/tpkb.exe

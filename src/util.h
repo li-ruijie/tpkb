@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) 2026 Li Ruijie
+ * Licensed under the GNU General Public License v3.0.
+ */
+
+#ifndef W10WHEEL_UTIL_H
+#define W10WHEEL_UTIL_H
+
+#include <windows.h>
+#include "types.h"
+
+/* Single instance lock */
+BOOL util_try_lock(void);
+void util_unlock(void);
+void util_cleanup(void);
+
+/* Owner-only security attributes (for mutex and pipe) */
+PSECURITY_ATTRIBUTES util_get_owner_sa(void);
+
+/* Process priority */
+void util_set_priority(Priority p);
+
+/* Win32 error message */
+void util_get_last_error_message(wchar_t *buf, int bufsize);
+
+#endif
