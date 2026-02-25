@@ -71,7 +71,7 @@ static volatile Priority g_priority = PRIO_ABOVE_NORMAL;
 
 /* Properties profile */
 static wchar_t           g_selected_props[256] = L"Default";
-static wchar_t           g_user_dir[MAX_PATH];
+static wchar_t           g_config_dir[MAX_PATH];
 
 /* LastFlags */
 static LastFlags         g_last_flags;
@@ -187,9 +187,9 @@ static void prop_store(const wchar_t *path) {
 
 void cfg_get_properties_path(const wchar_t *name, wchar_t *buf, int bufsize) {
     if (wcscmp(name, L"Default") == 0)
-        _snwprintf(buf, bufsize, L"%s\\.W10Wheel.properties", g_user_dir);
+        _snwprintf(buf, bufsize, L"%s\\w10wheel.conf", g_config_dir);
     else
-        _snwprintf(buf, bufsize, L"%s\\.W10Wheel.%s.properties", g_user_dir, name);
+        _snwprintf(buf, bufsize, L"%s\\w10wheel.%s.conf", g_config_dir, name);
 }
 
 BOOL cfg_properties_exists(const wchar_t *name) {
@@ -213,7 +213,7 @@ void cfg_properties_delete(const wchar_t *name) {
 
 int cfg_get_prop_files(wchar_t names[][256], int maxcount) {
     wchar_t pattern[MAX_PATH];
-    _snwprintf(pattern, MAX_PATH, L"%s\\.W10Wheel.*.properties", g_user_dir);
+    _snwprintf(pattern, MAX_PATH, L"%s\\w10wheel.*.conf", g_config_dir);
 
     WIN32_FIND_DATAW fd;
     HANDLE hFind = FindFirstFileW(pattern, &fd);
@@ -223,9 +223,9 @@ int cfg_get_prop_files(wchar_t names[][256], int maxcount) {
     do {
         /* Skip Default and --prefixed */
         const wchar_t *fn = fd.cFileName;
-        /* Extract name from .W10Wheel.{name}.properties */
-        const wchar_t *start = fn + 10; /* skip ".W10Wheel." */
-        const wchar_t *end = wcsstr(start, L".properties");
+        /* Extract name from w10wheel.{name}.conf */
+        const wchar_t *start = fn + 9; /* skip "w10wheel." */
+        const wchar_t *end = wcsstr(start, L".conf");
         if (!end || start >= end) continue;
         if (wcsncmp(start, L"--", 2) == 0) continue;
 
@@ -243,7 +243,7 @@ int cfg_get_prop_files(wchar_t names[][256], int maxcount) {
     return count;
 }
 
-const wchar_t *cfg_get_user_dir(void) { return g_user_dir; }
+const wchar_t *cfg_get_user_dir(void) { return g_config_dir; }
 
 /* ========== Initialization ========== */
 
@@ -251,8 +251,14 @@ void cfg_init(void) {
     InitializeCriticalSection(&g_scroll_cs);
     memset(&g_last_flags, 0, sizeof(g_last_flags));
 
-    /* Get user profile dir */
-    ExpandEnvironmentStringsW(L"%USERPROFILE%", g_user_dir, MAX_PATH);
+    /* Build config dir path and ensure it exists */
+    wchar_t home[MAX_PATH];
+    ExpandEnvironmentStringsW(L"%USERPROFILE%", home, MAX_PATH);
+    wchar_t dotconfig[MAX_PATH];
+    _snwprintf(dotconfig, MAX_PATH, L"%s\\.config", home);
+    CreateDirectoryW(dotconfig, NULL);
+    _snwprintf(g_config_dir, MAX_PATH, L"%s\\w10wheel", dotconfig);
+    CreateDirectoryW(g_config_dir, NULL);
 
     /* Detect system language */
     const wchar_t *lang = locale_detect_language();
