@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2016-2021 Yuki Ono
  * Copyright (c) 2026 Li Ruijie
  * Licensed under the MIT License.
  */
@@ -14,7 +13,7 @@
 
 #define PROGRAM_NAME      L"W10Wheel"
 #define PROGRAM_NAME_NET  L"W10Wheel.NET"
-#define PROGRAM_VERSION   L"3.0"
+#define PROGRAM_VERSION   L"2.8.1"
 
 /* ========== Resource IDs ========== */
 

@@ -7,3 +7,31 @@
 IDI_APP       ICON "AppIcon.ico"
 IDI_TRAY_RUN  ICON "TrayIcon-Run.ico"
 IDI_TRAY_STOP ICON "TrayIcon-Stop.ico"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    2,8,1,0
+PRODUCTVERSION 2,8,1,0
+FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+FILEFLAGS      0
+FILEOS         VOS_NT_WINDOWS32
+FILETYPE       VFT_APP
+FILESUBTYPE    VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "FileDescription", "Mouse Wheel Simulator"
+            VALUE "FileVersion", "2.8.1.0"
+            VALUE "InternalName", "W10Wheel"
+            VALUE "LegalCopyright", "Copyright (c) 2026 Li Ruijie"
+            VALUE "OriginalFilename", "W10Wheel.exe"
+            VALUE "ProductName", "W10Wheel"
+            VALUE "ProductVersion", "2.8.1.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 0x04B0
+    END
+END
