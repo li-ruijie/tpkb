@@ -25,14 +25,13 @@ add_executable(W10Wheel WIN32
 target_include_directories(W10Wheel PRIVATE src)
 target_link_libraries(W10Wheel PRIVATE user32 kernel32 shell32 comctl32 psapi)
 
+target_compile_definitions(W10Wheel PRIVATE UNICODE _UNICODE)
+
 if(MSVC)
-    target_compile_definitions(W10Wheel PRIVATE UNICODE _UNICODE _CRT_SECURE_NO_WARNINGS)
+    target_compile_definitions(W10Wheel PRIVATE _CRT_SECURE_NO_WARNINGS)
     target_compile_options(W10Wheel PRIVATE /W4)
     set_property(TARGET W10Wheel PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-
-if(MINGW)
-    target_compile_definitions(W10Wheel PRIVATE UNICODE _UNICODE)
+elseif(MINGW)
     target_compile_options(W10Wheel PRIVATE -Wall)
     target_link_options(W10Wheel PRIVATE -static -municode)
 endif()

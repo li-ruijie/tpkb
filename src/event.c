@@ -453,25 +453,25 @@ static LRESULT (*volatile g_proc_up_s)(const MouseEvent *) = none_up;
 
 static void change_trigger(void) {
     if (cfg_is_double_trigger()) {
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_lr, lr_down);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_lr, lr_up);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_s, none_down);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_s, none_up);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_lr, (PVOID)lr_down);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_lr, (PVOID)lr_up);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_s, (PVOID)none_down);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_s, (PVOID)none_up);
     } else if (cfg_is_single_trigger()) {
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_lr, none_down);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_lr, none_up);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_s, single_down);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_s, single_up);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_lr, (PVOID)none_down);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_lr, (PVOID)none_up);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_s, (PVOID)single_down);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_s, (PVOID)single_up);
     } else if (cfg_is_drag_trigger()) {
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_lr, drag_down);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_lr, drag_up);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_s, drag_down);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_s, drag_up);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_lr, (PVOID)drag_down);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_lr, (PVOID)drag_up);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_s, (PVOID)drag_down);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_s, (PVOID)drag_up);
     } else {
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_lr, none_down);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_lr, none_up);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_s, none_down);
-        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_s, none_up);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_lr, (PVOID)none_down);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_lr, (PVOID)none_up);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_down_s, (PVOID)none_down);
+        InterlockedExchangePointer((volatile PVOID *)&g_proc_up_s, (PVOID)none_up);
     }
 }
 

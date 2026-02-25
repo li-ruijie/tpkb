@@ -89,6 +89,7 @@ static void from_up(const MouseEvent *down, const MouseEvent *up) {
 }
 
 static void from_down(const MouseEvent *d1, const MouseEvent *d2) {
+    (void)d1;
     cfg_start_scroll(&d2->info);
 }
 
