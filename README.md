@@ -104,7 +104,7 @@ MinGW GCC is also supported via CMakeLists.txt.
 
 ## License
 
-The MIT License
+GPL-3.0
 
 ## Credits
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2026 Li Ruijie
- * Licensed under the MIT License.
+ * Licensed under the GNU General Public License v3.0.
  */
 
 #include "waiter.h"

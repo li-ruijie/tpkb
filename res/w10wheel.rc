@@ -4,9 +4,9 @@
 #define IDI_TRAY_RUN  101
 #define IDI_TRAY_STOP 102
 
-IDI_APP       ICON "AppIcon.ico"
-IDI_TRAY_RUN  ICON "TrayIcon-Run.ico"
-IDI_TRAY_STOP ICON "TrayIcon-Stop.ico"
+IDI_APP       ICON "icon-run.ico"
+IDI_TRAY_RUN  ICON "icon-run.ico"
+IDI_TRAY_STOP ICON "icon-stop.ico"
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION    2,8,1,0
