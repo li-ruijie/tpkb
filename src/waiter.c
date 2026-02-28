@@ -132,8 +132,6 @@ static void dispatch_event(const MouseEvent *down, const MouseEvent *res) {
         from_up(down, res);
     } else if (res->type == ME_LEFT_DOWN || res->type == ME_RIGHT_DOWN) {
         from_down(down, res);
-    } else if (res->type == ME_CANCEL) {
-        /* cancelled */
     }
 }
 

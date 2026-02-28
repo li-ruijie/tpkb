@@ -12,21 +12,14 @@
 /* ========== Application constants ========== */
 
 #define PROGRAM_NAME      L"tpkb"
-#define PROGRAM_VERSION   L"3.0.0"
+#define PROGRAM_VERSION   L"3.0.1"
 
 /* ========== Tray callback message ========== */
 
 #define WM_TRAYICON  (WM_USER + 1)
 
-/* ========== Hook constants ========== */
-
-#define TPKB_WH_MOUSE_LL    14
-#define TPKB_WH_KEYBOARD_LL 13
-#define TPKB_WHEEL_DELTA    120
-
 /* ========== Mouse event flags ========== */
 
-#define TPKB_MOUSEEVENTF_MOVE      0x0001
 #define TPKB_MOUSEEVENTF_LEFTDOWN  0x0002
 #define TPKB_MOUSEEVENTF_LEFTUP    0x0004
 #define TPKB_MOUSEEVENTF_RIGHTDOWN 0x0008
@@ -37,8 +30,6 @@
 #define TPKB_MOUSEEVENTF_XUP       0x0100
 #define TPKB_MOUSEEVENTF_WHEEL     0x0800
 #define TPKB_MOUSEEVENTF_HWHEEL    0x1000
-#define TPKB_MOUSEEVENTF_ABSOLUTE  0x8000
-
 #define TPKB_XBUTTON1 0x0001
 #define TPKB_XBUTTON2 0x0002
 
@@ -49,17 +40,6 @@
 #define TPKB_OCR_HAND    32649
 #define TPKB_OCR_SIZENS  32645
 #define TPKB_OCR_SIZEWE  32644
-
-/* ========== Raw Input constants ========== */
-
-#define TPKB_WM_INPUT              0x00FF
-#define TPKB_RID_INPUT             0x10000003u
-#define TPKB_MOUSE_MOVE_RELATIVE   0
-#define TPKB_RIM_TYPEMOUSE         0
-#define TPKB_HID_USAGE_PAGE_GENERIC 0x01
-#define TPKB_HID_USAGE_GENERIC_MOUSE 0x02
-#define TPKB_RIDEV_INPUTSINK       0x00000100u
-#define TPKB_RIDEV_REMOVE          0x00000001u
 
 /* ========== Trigger enum ========== */
 
@@ -90,10 +70,6 @@ static inline BOOL trigger_is_drag(Trigger t) {
     return t >= TRIGGER_LEFT_DRAG && t <= TRIGGER_X2_DRAG;
 }
 
-static inline BOOL trigger_is_none(Trigger t) {
-    return t == TRIGGER_NONE;
-}
-
 /* ========== Mouse event type ========== */
 
 typedef enum {
@@ -103,7 +79,6 @@ typedef enum {
     ME_X1_DOWN, ME_X1_UP,
     ME_X2_DOWN, ME_X2_UP,
     ME_MOVE,
-    ME_CANCEL,
     ME_NON_EVENT
 } MouseEventType;
 
@@ -112,25 +87,9 @@ typedef struct {
     MSLLHOOKSTRUCT info;
 } MouseEvent;
 
-static inline BOOL me_is_down(MouseEventType t) {
-    return t == ME_LEFT_DOWN || t == ME_RIGHT_DOWN || t == ME_MIDDLE_DOWN ||
-           t == ME_X1_DOWN || t == ME_X2_DOWN;
-}
-
 static inline BOOL me_is_up(MouseEventType t) {
     return t == ME_LEFT_UP || t == ME_RIGHT_UP || t == ME_MIDDLE_UP ||
            t == ME_X1_UP || t == ME_X2_UP;
-}
-
-static inline BOOL me_is_single(MouseEventType t) {
-    return t == ME_MIDDLE_DOWN || t == ME_MIDDLE_UP ||
-           t == ME_X1_DOWN || t == ME_X1_UP ||
-           t == ME_X2_DOWN || t == ME_X2_UP;
-}
-
-static inline BOOL me_is_lr(MouseEventType t) {
-    return t == ME_LEFT_DOWN || t == ME_LEFT_UP ||
-           t == ME_RIGHT_DOWN || t == ME_RIGHT_UP;
 }
 
 static inline BOOL me_is_left(MouseEventType t) {
@@ -151,20 +110,6 @@ static inline BOOL me_is_x1(MouseEventType t) {
 
 static inline BOOL me_is_x2(MouseEventType t) {
     return t == ME_X2_DOWN || t == ME_X2_UP;
-}
-
-static inline BOOL me_same_event(MouseEventType a, MouseEventType b) {
-    return a == b;
-}
-
-static inline BOOL me_same_button(MouseEventType a, MouseEventType b) {
-    /* Left pair */
-    if ((a == ME_LEFT_DOWN && b == ME_LEFT_UP) || (a == ME_LEFT_UP && b == ME_LEFT_DOWN)) return TRUE;
-    if ((a == ME_RIGHT_DOWN && b == ME_RIGHT_UP) || (a == ME_RIGHT_UP && b == ME_RIGHT_DOWN)) return TRUE;
-    if ((a == ME_MIDDLE_DOWN && b == ME_MIDDLE_UP) || (a == ME_MIDDLE_UP && b == ME_MIDDLE_DOWN)) return TRUE;
-    if ((a == ME_X1_DOWN && b == ME_X1_UP) || (a == ME_X1_UP && b == ME_X1_DOWN)) return TRUE;
-    if ((a == ME_X2_DOWN && b == ME_X2_UP) || (a == ME_X2_UP && b == ME_X2_DOWN)) return TRUE;
-    return FALSE;
 }
 
 /* Get the trigger type for a mouse event */

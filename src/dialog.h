@@ -9,8 +9,6 @@
 #include <windows.h>
 
 void dialog_error(const wchar_t *msg, const wchar_t *title);
-BOOL dialog_number_input(const wchar_t *name, const wchar_t *title,
-                         int low, int up, int cur, int *result);
 BOOL dialog_text_input(const wchar_t *msg, const wchar_t *title,
                        wchar_t *buf, int bufsize);
 

@@ -13,7 +13,6 @@
 /* ========== Checker result convention ========== */
 /* Return 0 = call next hook, 1 = suppress, -1 = continue checking (no result) */
 #define CHECK_NEXT      (-1)
-#define HOOK_PASS       0
 #define HOOK_SUPPRESS   1
 
 static LRESULT (*g_call_next_hook)(void) = NULL;

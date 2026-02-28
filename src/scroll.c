@@ -336,27 +336,6 @@ static void (*send_wheel_fn)(POINT, int, int, int, int) = send_wheel_std;
 
 /* ========== Public scroll function ========== */
 
-static int prev_dx, prev_dy;
-
-void scroll_send_wheel(POINT move_pt) {
-    EnterCriticalSection(&g_scroll_state_cs);
-    int ssx = scroll_start_x, ssy = scroll_start_y;
-    int dx = move_pt.x - ssx;
-    int dy = move_pt.y - ssy;
-    if (swap_enabled) { int t = dx; dx = dy; dy = t; }
-
-    int fdx = dx - prev_dx;
-    int fdy = dy - prev_dy;
-    prev_dx = dx;
-    prev_dy = dy;
-    LeaveCriticalSection(&g_scroll_state_cs);
-
-    POINT wspt;
-    wspt.x = ssx;
-    wspt.y = ssy;
-    send_wheel_fn(wspt, dx, dy, fdx, fdy);
-}
-
 static void send_wheel_raw(int x, int y) {
     if (x != 0 || y != 0) {
         EnterCriticalSection(&g_scroll_state_cs);
@@ -381,8 +360,6 @@ void scroll_init_scroll(void) {
     cfg_get_scroll_start_point(&scroll_start_x, &scroll_start_y);
     raw_total_x = 0;
     raw_total_y = 0;
-    prev_dx = 0;
-    prev_dy = 0;
     LeaveCriticalSection(&g_scroll_state_cs);
 
     /* Function pointers */
@@ -467,19 +444,3 @@ void scroll_cleanup(void) {
     DeleteCriticalSection(&g_iq_cs);
 }
 
-/* ========== Window/process info ========== */
-
-BOOL scroll_get_path_from_foreground(wchar_t *buf, int bufsize) {
-    HWND hwnd = GetForegroundWindow();
-    if (!hwnd) return FALSE;
-
-    DWORD pid;
-    GetWindowThreadProcessId(hwnd, &pid);
-    HANDLE hproc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
-    if (!hproc) return FALSE;
-
-    DWORD sz = (DWORD)bufsize;
-    BOOL ok = QueryFullProcessImageNameW(hproc, 0, buf, &sz);
-    CloseHandle(hproc);
-    return ok;
-}

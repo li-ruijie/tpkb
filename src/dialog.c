@@ -165,25 +165,6 @@ static INT_PTR show_input_dialog(const wchar_t *title, const wchar_t *prompt,
     #undef ALIGN_DWORD
 }
 
-BOOL dialog_number_input(const wchar_t *name, const wchar_t *title,
-                         int low, int up, int cur, int *result) {
-    wchar_t prompt[128], defval[32];
-    _snwprintf(prompt, 128, L"%s (%d - %d)", name, low, up);
-    _snwprintf(defval, 32, L"%d", cur);
-
-    wchar_t res[256];
-    res[0] = L'\0';
-    if (show_input_dialog(title, prompt, defval, res, 256) != IDOK)
-        return FALSE;
-
-    wchar_t *endptr;
-    long val = wcstol(res, &endptr, 10);
-    if (*endptr != L'\0') return FALSE;
-    if (val < low || val > up) return FALSE;
-    *result = (int)val;
-    return TRUE;
-}
-
 BOOL dialog_text_input(const wchar_t *msg, const wchar_t *title,
                        wchar_t *buf, int bufsize) {
     wchar_t res[256];

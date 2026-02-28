@@ -9,8 +9,8 @@ IDI_TRAY_RUN  ICON "icon-run.ico"
 IDI_TRAY_STOP ICON "icon-stop.ico"
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION    3,0,0,0
-PRODUCTVERSION 3,0,0,0
+FILEVERSION    3,0,1,0
+PRODUCTVERSION 3,0,1,0
 FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
 FILEFLAGS      0
 FILEOS         VOS_NT_WINDOWS32
@@ -22,12 +22,12 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "FileDescription", "TrackPoint Keyboard Helper"
-            VALUE "FileVersion", "3.0.0.0"
+            VALUE "FileVersion", "3.0.1.0"
             VALUE "InternalName", "tpkb"
             VALUE "LegalCopyright", "Copyright (c) 2026 Li Ruijie"
             VALUE "OriginalFilename", "tpkb.exe"
             VALUE "ProductName", "tpkb"
-            VALUE "ProductVersion", "3.0.0.0"
+            VALUE "ProductVersion", "3.0.1.0"
         END
     END
     BLOCK "VarFileInfo"

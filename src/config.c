@@ -425,7 +425,6 @@ BOOL cfg_is_lr_trigger(void)     { return cfg_is_trigger(TRIGGER_LR); }
 BOOL cfg_is_single_trigger(void) { return trigger_is_single(g_trigger); }
 BOOL cfg_is_double_trigger(void) { return trigger_is_double(g_trigger); }
 BOOL cfg_is_drag_trigger(void)   { return trigger_is_drag(g_trigger); }
-BOOL cfg_is_none_trigger(void)   { return trigger_is_none(g_trigger); }
 
 BOOL cfg_is_trigger_key(const KeyboardEvent *ke) {
     return ke_vk_code(ke) == g_target_vk_code;

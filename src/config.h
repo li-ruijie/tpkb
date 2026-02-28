@@ -83,7 +83,6 @@ BOOL          cfg_is_lr_trigger(void);
 BOOL          cfg_is_single_trigger(void);
 BOOL          cfg_is_double_trigger(void);
 BOOL          cfg_is_drag_trigger(void);
-BOOL          cfg_is_none_trigger(void);
 BOOL          cfg_is_trigger_key(const KeyboardEvent *ke);
 
 /* Priority */

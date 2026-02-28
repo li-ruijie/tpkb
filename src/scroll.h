@@ -31,10 +31,6 @@ BOOL scroll_check_alt(void);
 BOOL scroll_check_esc(void);
 
 /* Scroll wheel simulation */
-void scroll_send_wheel(POINT move_pt);
 void scroll_init_scroll(void);
-
-/* Window/process info */
-BOOL scroll_get_path_from_foreground(wchar_t *buf, int bufsize);
 
 #endif
