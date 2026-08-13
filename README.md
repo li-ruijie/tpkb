@@ -1,7 +1,7 @@
 # tpkb
 
 <p align="center">
-  <img src="art/icon-run.png" width="128">
+  <img src="res/icon-run.png" width="128">
 </p>
 
 [![Build](https://github.com/li-ruijie/tpkb/actions/workflows/build.yml/badge.svg)](https://github.com/li-ruijie/tpkb/actions/workflows/build.yml)
